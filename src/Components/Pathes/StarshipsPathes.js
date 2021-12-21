@@ -1,0 +1,18 @@
+export const StarshipPath = [
+    '/images/starships/starship_none_2.png',
+    '/images/starships/starship_none_2.png',
+    '/images/starships/CR90_corvette.png',
+    '/images/starships/Star_Destroyer.png',
+    '/images/starships/starship_none_2.png',
+    '/images/starships/Sentinel-class_landing_craft.png',
+    '/images/starships/starship_none_2.png',
+    '/images/starships/starship_none_2.png',
+    '/images/starships/starship_none_2.png',
+    '/images/starships/Death_Star.png',
+    '/images/starships/Millennium_Falcon1.png',
+    '/images/starships/Y-wing.png',
+    '/images/starships/X-wing_Fathead.png',
+    '/images/starships/TIE_Advanced1.png',
+    '/images/starships/starship_none_2.png',
+    '/images/starships/Executor.png',
+]

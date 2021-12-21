@@ -1,8 +1,9 @@
-import React, {useEffect} from "react";
+import React from "react";
 import styled from "styled-components";
 import CardFilm from "../Cards/CardFilm";
 import { Wrapper } from "./Main";
 import Loader from "../Style/Loader";
+import ModalFilms from "../Modals/ModalFilms";
 
 const Container = styled.div`
   display: flex;
@@ -26,20 +27,18 @@ color: #fff;
 `;
 
 
-const Films = ({response, error, setUrl, result}) => {
-    useEffect(() => {
-    setUrl(`https://swapi.dev/api/films`);
- }, [setUrl]);
+const Films = ({ response, error, openModal, setOpenModal }) => {
 
 
-console.log(response);
 return (
+  <>
+    <ModalFilms openModal={openModal} setOpenModal={setOpenModal}/>
     <Wrapper>
       <Container>
       {response === null ? (
           <Loader />
         ) :
-        response ? <CardFilm pers={response} />
+        response ? <CardFilm pers={response.films} setOpenModal={setOpenModal}/>
             : error ? (
               <ErrorWrapper>Sorry, we will fix it soon...</ErrorWrapper>
             ) : (
@@ -47,6 +46,7 @@ return (
             )}
       </Container>
     </Wrapper>
+    </>
   );
 }
 

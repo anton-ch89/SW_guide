@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 export const useFetch = () => {
     const [response, setResponse] = useState(null);
     const [error, setError] = useState(null);
-    const [url, setUrl] = useState(``)
+    const path = '/swapi.json'
 
 
 
@@ -14,9 +14,9 @@ export const useFetch = () => {
      const fetchData = async () => {
 
         try {
-            const json = await fetch(url);
+            const json = await fetch(path);
             const res = await json.json();
-            const result = await res.results;
+            const result = await res;
             setResponse(result);
           } catch (err) {
             setError(err);
@@ -24,6 +24,6 @@ export const useFetch = () => {
      };
      fetchData();
 
-    }, [url])
-    return { response, error, url, setUrl };
+    }, [path])
+    return { response, error};
 }

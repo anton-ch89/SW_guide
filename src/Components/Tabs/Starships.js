@@ -1,9 +1,12 @@
-import React, {useEffect} from "react";
+import React from "react";
 import styled from "styled-components";
 import CardStarship from "../Cards/CardStarship";
 import { Wrapper } from "./Main";
-import ButtonsPN from "../ButtonsPN";
 import Loader from "../Style/Loader";
+import ModalStarships from "../Modals/ModalStarships";
+import { useArray } from "../hooks/useArray";
+
+import { Button } from "../PageButton";
 
 
 const Container = styled.div`
@@ -14,14 +17,9 @@ const Container = styled.div`
   align-items: center;
   margin: 1% 0;
 `;
-const ButtonWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
 
-const ErrorWrapper = styled.div `
+const ErrorWrapper = styled.div`
 display: flex;
 justify-content: center;
 align-items: center;
@@ -31,39 +29,68 @@ padding: 50px;
 color: #fff;
 `;
 
-
-const Starships = ({response, error, pageStarship, setPageStarship, setUrl, url}) => {
-    useEffect(() => {
-    setUrl(`https://swapi.dev/api/starships/?page=${pageStarship}`);
- }, [pageStarship, setUrl]);
-
-
- if (  pageStarship > 4){
-    setPageStarship(pageStarship = 1)
-  }else if (pageStarship < 1) {
-    setPageStarship(pageStarship = 4)
-  }
-  console.log(response);
+const ButtonsWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+`;
 
 
-return (
-    <Wrapper>
-      <Container>
-        <ButtonWrapper>
-         <ButtonsPN page={pageStarship} setPage={setPageStarship}/>
-        </ButtonWrapper>
-        {response === null ? (
-          <Loader />
-        ) :
-        response ? <CardStarship pers={response} />
-            : error ? (
-              <ErrorWrapper>Sorry, we will fix it soon...</ErrorWrapper>
-            ) : (
-              <Loader />
-            )}
+const Starships = ({ response, error, openModal, setOpenModal }) => {
 
-      </Container>
-    </Wrapper>
+  const { array, setArray } = useArray();
+
+  if (!response) return null;
+  let resp = response.starships;
+
+  return (
+    <>
+      <ModalStarships setOpenModal={setOpenModal} openModal={openModal}/>
+      <Wrapper>
+        <Container>
+          {response === null ? (
+            <Loader />
+          ) :
+            response ? <CardStarship ships={array.length === 0 ? resp.slice(0, 6) : array} setOpenModal={setOpenModal}/>
+              : error ? (
+                <ErrorWrapper>Sorry, we will fix it soon...</ErrorWrapper>
+              ) : (
+                <Loader />
+              )}
+
+        </Container>
+        <ButtonsWrapper>
+          {array.length === resp.length ? (
+            <Button onClick={() => setArray([])}>Hide</Button>
+          ) : (
+            <Button
+              onClick={() =>
+                setArray(
+                  resp.filter((_, index) => {
+                    if (array.length < 1) {
+                      return index < 9;
+                    }
+                    if (array.length === 9) {
+                      return index < 12;
+                    }
+                    if (array.length === 12) {
+                      return index < 15;
+                    }
+                    if (array.length === 15) {
+                      return index <= 18;
+                    }
+                    return index
+                  })
+                )
+              }
+            >
+              More
+            </Button>
+          )}
+        </ButtonsWrapper>
+
+      </Wrapper>
+    </>
   );
 }
 

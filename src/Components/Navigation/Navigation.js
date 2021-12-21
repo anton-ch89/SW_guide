@@ -18,8 +18,22 @@ const LogoWrapper = styled.div`
   align-items: center;
   justify-content: center;
   text-align: center;
-  width: 35%;
+  width: 32%;
   margin: 60px 0 20px 0;
+  transition:1000ms;
+  animation-name: slideDown;
+  animation-duration: 4s; 
+  &:hover{
+    transform: scale(1.08);
+  }
+  @keyframes slideDown {
+    0% {
+        transform: translateY(-520%);
+    }
+    100% {
+        transform: translateY(0%);
+    }   
+}
 `;
 
 const Figcaption = styled.p`
@@ -33,6 +47,7 @@ const Figcaption = styled.p`
 
 const Ul = styled.ul`
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-around;
   width: 100%;
 `;
@@ -40,8 +55,10 @@ const Ul = styled.ul`
 const Title = styled.li`
   color: #fff;
   font-size: 20px;
+  font-weight: 600;
   text-transform: uppercase;
   cursor: pointer;
+  margin: 10px;
   &:hover {
     color: #ffc107;
     transition: 0.5s;
@@ -52,7 +69,7 @@ const Logo = styled.img`
   width: 100%;
 `;
 
-const Navigation = ({active, setActive}) => {
+const Navigation = ({setPhrase}) => {
 
 
 
@@ -61,7 +78,7 @@ const Navigation = ({active, setActive}) => {
       <Container>
           <LogoWrapper>
           <Link to='/'>
-            <Logo src={logo} alt="" />
+            <Logo src={logo} alt="" onClick={()=> setPhrase("Истинная Йоды мудрость откроется, если на него нажмешь ты...")}/>
             <Figcaption>Guide</Figcaption>
             </Link>
           </LogoWrapper>

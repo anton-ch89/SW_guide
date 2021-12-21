@@ -2,26 +2,23 @@ import React from 'react'
 import { Button } from "./PageButton";
 
 
-const ButtonsPN = ({page, setPage}) => {
-    return (
-        <>
-                      <Button
-            onClick={() => {
-              setPage(page - 1);
-            }}
-          >
-            Previous
-          </Button>
-          <Button
-            onClick={() => {
-              setPage(page + 1);
-            }}
-          >
-            Next
-          </Button>
- 
-        </>
-    )
+const ButtonsPN = ({ array, setArray, response }) => {
+
+
+  return (
+    <>
+      <Button
+      
+      >
+        Previous
+      </Button>
+      <Button
+      >
+        Next
+      </Button>
+
+    </>
+  )
 }
 
 ButtonsPN.propTypes = {

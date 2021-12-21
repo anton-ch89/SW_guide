@@ -9,6 +9,7 @@ display: flex;
 flex-wrap: wrap;
 justify-content: space-around;
 align-items: center;
+cursor: pointer;
 `
 
 const ImgWrapper = styled.div`
@@ -23,7 +24,11 @@ padding: 15px;
 margin: 15px;
 min-width: 250px;
 width: 300px;
-height: 440px;
+height: 340px;
+transition: 0.5s;
+&:hover{
+  transform: scale(1.03);
+}
 `
 const CardTitle = styled.h2`
 display: flex;
@@ -41,24 +46,15 @@ const PlanetImg = styled.img`
 width: 150px;
 `
 
-const CardText = styled.p`
-display: flex;
-justify-content: center;
-align-items: centr;
-font-size: 1rem;
-padding: 7px 0;
-text-align: center;
-`
 
 
 
-const CardFilm = ({ pers }) => {
-  console.log(pers);
+const CardFilm = ({ pers,  setOpenModal }) => {
   return (
     <CardWrapper>
       {pers.map((e, i) => {
         return (
-          <Card key={i}>
+          <Card key={i} onClick={() => setOpenModal(e)}>
             <ImgWrapper>
               <PlanetImg src={FilmPathes.filter((path) => {
                 return path === FilmPathes[i]
@@ -67,8 +63,6 @@ const CardFilm = ({ pers }) => {
             {!e.producer ? <Loader /> :
               <>
                 <CardTitle >{e.title}</CardTitle>
-                <CardText>Producer:&nbsp;{e.producer}</CardText>
-                <CardText >Release date:&nbsp;{e.release_date}</CardText>
               </>}
           </Card>
         );

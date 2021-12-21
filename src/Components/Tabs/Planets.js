@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import CardPlanet from "../Cards/CardPlanet";
 import { Wrapper } from "./Main";
-import ButtonsPN from "../ButtonsPN";
 import Loader from "../Style/Loader";
 import ModalPlanet from "../Modals/ModalPlanet";
-
+import { useArray } from "../hooks/useArray";
+import { Button } from "../PageButton";
 
 
 const Container = styled.div`
@@ -16,10 +16,10 @@ const Container = styled.div`
   align-items: center;
   margin: 1% 0;
 `;
-const ButtonWrapper = styled.div`
+const ButtonsWrapper = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
+  margin-bottom: 50px;
 `;
 
 
@@ -33,39 +33,56 @@ padding: 50px;
 color: #fff;
 `;
 
-const Planets = ({ response, error, pagePlanet, setPagePlanet, setUrl, setOpenModal, openModal}) => {
+const Planets = ({ response, error, setOpenModal, openModal}) => {
+  const { array, setArray } = useArray();
 
 
-  useEffect(() => {
-    setUrl(`https://swapi.dev/api/planets/?page=${pagePlanet}`);
-  }, [pagePlanet, setUrl]);
-
-
-  if (pagePlanet > 6) {
-    setPagePlanet(pagePlanet = 1)
-  } else if (pagePlanet < 1) {
-    setPagePlanet(pagePlanet = 6)
-  }
-
+  if (!response) return null;
+  const resp = response.planets;
 
   return (
     <>
       <ModalPlanet openModal={openModal} setOpenModal={setOpenModal}/>
       <Wrapper>
         <Container>
-          <ButtonWrapper>
-            <ButtonsPN page={pagePlanet} setPage={setPagePlanet} />
-          </ButtonWrapper>
           {response === null ? (
             <Loader />
           ) :
-            response ? <CardPlanet pers={response} setOpenModal={setOpenModal}/>
+            response ? <CardPlanet pers={array.length === 0 ? resp.slice(0, 10) : array} setOpenModal={setOpenModal}/>
               : error ? (
                 <ErrorWrapper>Sorry, we will fix it soon...</ErrorWrapper>
               ) : (
                 <Loader />
               )}
         </Container>
+        <ButtonsWrapper>
+          {array.length === resp.length ? (
+            <Button onClick={() => setArray([])}>Hide</Button>
+          ) : (
+            <Button
+              onClick={() =>
+                setArray(
+                  resp.filter((_, index) => {
+                    if (array.length < 1) {
+                      return index < 20;
+                    }
+                    if (array.length === 20) {
+                      return index < 40;
+                    }
+                    if (array.length === 40) {
+                      return index < 60;
+                    }
+                    
+                    return index
+                  })
+                )
+              }
+            >
+              More
+            </Button>
+          )}
+        </ButtonsWrapper>
+
       </Wrapper>
     </>
   );

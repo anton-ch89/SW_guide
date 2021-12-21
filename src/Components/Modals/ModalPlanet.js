@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import Loader from '../Style/Loader';
 import noImage from '../../Images/planet_none_1.png'
 import { PlanetPath } from '../Pathes/PlanetPath';
 
@@ -15,31 +14,26 @@ export const Overlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
   z-index: 3;
 `;
 
 const Modal = styled.div`
-  background-color: #000;
+  background-color: rgba(255, 255, 255, 0.230);
+  backdrop-filter: blur(18px);
   border: 5px solid #fff;
   width: 500px;
   height: 600px;
+  margin: 30px;
+
 `;
 
 
 const ImgWrapper = styled.div`
 display: flex;
 justify-content: center;
-`
-const Card = styled.div`
-display: flex;
-flex-direction: column;
-border: 4px solid #6f6f6f;
-padding: 15px;
-margin: 15px;
-min-width: 250px;
-width: 300px;
-height: 450px;
+margin: 30px;
 `
 
 const CardTitle = styled.h2`
@@ -54,8 +48,16 @@ font-weight: bold;
 text-align: center;
 `
 const PlanetImg = styled.img`
-width: 200px;
-`
+width: 300px;
+`;
+
+const Escape = styled.p`
+  position: fixed;
+  font-size: 24px;
+  left: 93%;
+  top: 2%;
+  cursor: pointer;
+`;
 
 const CardText = styled.p`
 display: flex;
@@ -69,24 +71,31 @@ text-align: center;
 
 
 
-const ModalPlanet = ({ openModal, setOpenModal}) => {
-
-function closeModal(e) {
-    if (e.target.id === 'overlay') {
-        setOpenModal(null)
-    }
-}
-console.log(openModal);
-    if(!openModal) return null;
+const ModalPlanet = ({ openModal, setOpenModal }) => {
+    function closeModal(e) {
+        if (e.target.id === "overlay" || e.target.id === "escape") {
+          setOpenModal(null);
+        }
+      }
+    let num = null
+    if (!openModal) return null;
+    if (openModal) {
+        num = +openModal.url.slice(30, 32).replace(/\D/g, '') - 1;
+    };
     return (
         <Overlay id='overlay' onClick={closeModal}>
             <Modal>
+                <Escape id="escape" onClick={closeModal}>
+                    X
+                </Escape>
+                <ImgWrapper>
+                    <PlanetImg src={PlanetPath[num] ? PlanetPath[num] : noImage} />
+                </ImgWrapper>
                 <CardTitle>{openModal.name}</CardTitle>
                 <CardText>Diameter:&nbsp;{openModal.diameter === '0' ? 'unknown' : openModal.diameter}</CardText>
-                  <CardText >Population:&nbsp;{openModal.population}</CardText>
-                  <CardText >Climate:&nbsp;{openModal.climate}</CardText>
-                  <CardText >Terrain:&nbsp;<br />{openModal.terrain}</CardText>
-
+                <CardText >Population:&nbsp;{openModal.population}</CardText>
+                <CardText >Climate:&nbsp;{openModal.climate}</CardText>
+                <CardText >Terrain:&nbsp;<br />{openModal.terrain}</CardText>
             </Modal>
         </Overlay>
     )

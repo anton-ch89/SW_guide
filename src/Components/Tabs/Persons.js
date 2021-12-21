@@ -1,9 +1,11 @@
-import React, {useEffect} from "react";
+import React from "react";
 import styled from "styled-components";
 import CardPerson from "../Cards/CardPerson";
 import { Wrapper } from "./Main";
-import ButtonsPN from "../ButtonsPN";
 import Loader from "../Style/Loader";
+import ModalPerson from "../Modals/ModalPerson";
+import { useArray } from "../hooks/useArray";
+import { Button } from "../PageButton";
 
 const Container = styled.div`
   display: flex;
@@ -13,52 +15,78 @@ const Container = styled.div`
   align-items: center;
   margin: 1% 0;
 `;
-const ButtonWrapper = styled.div`
+
+const ButtonsWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+`;
+
+const ErrorWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  font-size: 36px;
+  padding: 50px;
+  color: #fff;
 `;
 
+const Persons = ({ response, error, openModal, setOpenModal }) => {
+  const { array, setArray } = useArray();
 
-const ErrorWrapper = styled.div `
-display: flex;
-justify-content: center;
-align-items: center;
-text-align: center;
-font-size: 36px;
-padding: 50px;
-color: #fff;
-`;
-
-const Persons = ({response, error, pagePerson, setPagePerson, url, setUrl}) => {
-  useEffect(() => {
-  setUrl(`https://swapi.dev/api/people/?page=${pagePerson}`)
-}, [pagePerson, setUrl]);
-if (  pagePerson > 9){
-  setPagePerson(pagePerson = 1)
-}else if (pagePerson < 1) {
-  setPagePerson(pagePerson = 9)
-}
-
-console.log(response);
+  if (!response) return null;
+  const resp = response.people;
 
   return (
-    <Wrapper>
-      <Container>
-        <ButtonWrapper>
-        <ButtonsPN setPage={setPagePerson} page={pagePerson}/>
-        </ButtonWrapper>
-        {response === null ? (
-          <Loader />
-        ) :
-        response ? <CardPerson pers={response} />
-            : error ? (
-              <ErrorWrapper>Sorry, we will fix it soon...</ErrorWrapper>
-            ) : (
-              <Loader />
-            )}
-      </Container>
-    </Wrapper>
+    <>
+      <ModalPerson openModal={openModal} setOpenModal={setOpenModal} />
+      <Wrapper>
+        <Container>
+          {response === null ? (
+            <Loader />
+          ) : response ? (
+            <CardPerson
+              pers={array.length === 0 ? resp.slice(0, 10) : array}
+              setOpenModal={setOpenModal}
+            />
+          ) : error ? (
+            <ErrorWrapper>Sorry, we will fix it soon...</ErrorWrapper>
+          ) : (
+            <Loader />
+          )}
+        </Container>
+        <ButtonsWrapper>
+          {array.length === resp.length ? (
+            <Button onClick={() => setArray([])}>Hide</Button>
+          ) : (
+            <Button
+              onClick={() =>
+                setArray(
+                  resp.filter((_, index) => {
+                    if (array.length < 1) {
+                      return index < 20;
+                    }
+                    if (array.length === 20) {
+                      return index < 40;
+                    }
+                    if (array.length === 40) {
+                      return index < 60;
+                    }
+                    if (array.length === 60) {
+                      return index <= 82;
+                    }
+                    return index
+                  })
+                )
+              }
+            >
+              More
+            </Button>
+          )}
+        </ButtonsWrapper>
+      </Wrapper>
+    </>
   );
 };
 

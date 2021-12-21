@@ -26,6 +26,10 @@ min-width: 250px;
 width: 300px;
 height: 300px;
 cursor: pointer;
+transition: 0.5s;
+&:hover{
+  transform: scale(1.03);
+}
 `
 const CardTitle = styled.h2`
 display: flex;
@@ -42,17 +46,6 @@ const PlanetImg = styled.img`
 width: 200px;
 `
 
-const CardText = styled.p`
-display: flex;
-justify-content: center;
-flex-direction: column;
-align-items: center;
-font-size: 1rem;
-padding: 7px 0;
-text-align: center;
-`
-
-
 
 const CardPlanet = ({ pers, setOpenModal }) => {
   return (
@@ -61,7 +54,7 @@ const CardPlanet = ({ pers, setOpenModal }) => {
         pers.map((e, i) => {
           const item = +e.url.slice(30, 32).replace(/\D/g, '');
           return (
-            <Card key={i} onClick={() => setOpenModal(e)}>
+            <Card key={i}  onClick={() => setOpenModal(e)}>
               <ImgWrapper>
                 <PlanetImg src={item <= 10  ? PlanetPath.filter((path) => {
                 return path === PlanetPath[i]
